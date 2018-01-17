@@ -1,0 +1,394 @@
+data READING;
+  	input program $ score @@;
+  	datalines;
+Cody  500 Cody 450 Cody 505 Cody 404 Cody 555 Cody 567 Cody 588 Cody 577 Cody 566 Cody 644 Cody 511 Cody 522 Cody 543 Cody 578
+Smith 355 Smith 388 Smith 440 Smith 600 Smith 510 Smith 501 Smith 502 Smith 489 Smith 499 Smith 489 Smith 515 Smith 520 Smith 520 Smith 480
+;
+run;
+ 
+proc ttest data = READING;
+title "Comparing Reading Programs";
+class program;
+var score;
+run;
+ 
+proc npar1way data = READING WILCOXON;
+title "Comparing Reading Programs using Wilcoxon";
+class program;
+var score;
+EXACT WILCOXON;
+run;
+ 
+                                	Comparing Reading Programs	12:54 Friday, April 25, 2014  11
+ 
+                                   	The TTEST Procedure
+ 
+                                         Variable:  score
+ 
+      	program     	N    	Mean     Std Dev 	Std Err 	Minimum     Maximum
+ 
+      	Cody       	14   	536.4     60.7513 	16.2365   	404.0   	644.0
+      	Smith      	14   	486.3     59.6843 	15.9513   	355.0   	600.0
+      	Diff (1-2)        	50.1429 	60.2202     22.7611
+ 
+  program       Method           	Mean   	95% CL Mean    	Std Dev  	95% CL Std Dev
+ 
+  Cody                          	536.4   	501.4    571.5 	60.7513 	44.0419  97.8730
+  Smith                         	486.3   	451.8    520.7     59.6843     43.2684  96.1540
+  Diff (1-2)    Pooled        	50.1429  	3.3568  96.9290 	60.2202 	47.4244  82.5277
+  Diff (1-2)    Satterthwaite 	50.1429  	3.3560  96.9297
+ 
+               	Method       	Variances    	DF    t Value	Pr > |t|
+ 
+               	Pooled       	Equal        	26   	2.20      0.0367
+               	Satterthwaite	Unequal      25.992   	2.20  	0.0367
+ 
+                                  	Equality of Variances
+ 
+                	    Method      Num DF	Den DF	F Value    Pr > F
+ 
+                    	Folded F    	13    	13       1.04	0.9500
+ 
+                        	Comparing Reading Programs using Wilcoxon                       	12
+                      	                                            12:54 Friday, April 25, 2014
+ 
+                                  	The NPAR1WAY Procedure
+ 
+                     	Wilcoxon Scores (Rank Sums) for Variable score
+                             	Classified by Variable program
+ 
+                                	Sum of  	Expected   	Std Dev      	Mean
+         	program   	N        Scores  	Under H0  	Under H0     	Score
+             ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+         	Cody     	14     	254.0     	203.0 	21.757927 	18.142857
+         	Smith    	14     	152.0     	203.0 	21.757927 	10.857143
+ 
+                           	Average scores were used for ties.
+ 
+ 
+                                 	Wilcoxon Two-Sample Test
+ 
+                           	Statistic (S)           	254.0000
+ 
+                           	Normal Approximation
+	                           Z                         	2.3210
+                           	One-Sided Pr >  Z         	0.0101
+                           	Two-Sided Pr > |Z|        	0.0203
+ 
+                           	t Approximation
+    	                       One-Sided Pr >  Z             0.0140
+                           	Two-Sided Pr > |Z|        	0.0281
+ 
+                           	Exact Test
+                           	One-Sided Pr >=  S        	0.0090
+             	              Two-Sided Pr >= |S - Mean|	0.0179
+ 
+                        	Z includes a continuity correction of 0.5.
+ 
+ 
+                                       Kruskal-Wallis Test
+ 
+                                    Chi-Square     	5.4942
+                                	DF                  	1
+                                	Pr > Chi-Square	0.0191
+ 
+Problem 6.4
+data QUES6_4;
+do GROUP = 'A', 'B', 'C';
+  	do I = 1 to 10;
+        	x = ROUND(RANNOR(135)*10+300+5*(GROUP EQ 'A')-7*(GROUP EQ 'C'));
+        	y = ROUND(RANUNI(135)*100+x);
+        	output;
+  	end;
+end;
+drop I;
+run;
+ 
+proc ttest data = QUES6_4;
+where group in ('A', 'C');
+class group;
+var x y;
+run;
+                                   	The TTEST Procedure
+ 
+                                           Variable:  x
+ 
+      	GROUP       	N    	Mean     Std Dev 	Std Err 	Minimum     Maximum
+ 
+      	A          	10   	305.1     11.6376  	3.6801   	281.0   	321.0
+      	C          	10   	288.4  	7.5011  	2.3721   	276.0   	299.0
+      	Diff (1-2)        	16.7000  	9.7903  	4.3784
+ 
+  GROUP         Method           	Mean   	95% CL Mean    	Std Dev  	95% CL Std Dev
+ 
+  A                             	305.1   	296.8    313.4 	11.6376  	8.0047  21.2457
+  C                             	288.4   	283.0    293.8  	7.5011  	5.1595  13.6941
+  Diff (1-2)    Pooled        	16.7000  	7.5014  25.8986  	9.7903  	7.3977  14.4781
+  Diff (1-2)    Satterthwaite 	16.7000  	7.3877  26.0123
+ 
+               	Method       	Variances    	DF    t Value	Pr > |t|
+ 
+               	Pooled       	Equal        	18   	3.81      0.0013
+               	Satterthwaite	Unequal      15.377   	3.81  	0.0016
+ 
+            	                      Equality of Variances
+ 
+                    	Method  	Num DF    Den DF	F Value	Pr > F
+ 
+                    	Folded F     	9     	9       2.41	0.2068
+ 
+ 
+                                           Variable:  y
+ 
+          GROUP       	N    	Mean     Std Dev 	Std Err 	Minimum     Maximum
+ 
+      	A          	10   	373.7     23.9214  	7.5646   	326.0   	405.0
+      	C          	10   	338.1     38.2723 	12.1028   	291.0   	387.0
+      	Diff (1-2)        	35.6000 	31.9139     14.2724
+ 
+  GROUP         Method           	Mean   	95% CL Mean    	Std Dev  	95% CL Std Dev
+ 
+  A	                             373.7   	356.6    390.8 	23.9214 	16.4540  43.6711
+  C                             	338.1   	310.7    365.5 	38.2723 	26.3250  69.8702
+  Diff (1-2)    Pooled        	35.6000  	5.6149  65.5851 	31.9139 	24.1146  47.1951
+  Diff (1-2)    Satterthwaite 	35.6000  	5.1969  66.0031
+ 
+               	Method       	Variances    	DF    t Value	Pr > |t|
+ 
+               	Pooled       	Equal        	18   	2.49      0.0226
+    	           Satterthwaite	Unequal      15.101   	2.49  	0.0247
+ 
+2014
+ 
+                                   	The TTEST Procedure
+ 
+                                           Variable:  y
+ 
+                                  	Equality of Variances
+ 
+                    	Method  	Num DF    Den DF	F Value	Pr > F
+ 
+                    	Folded F     	9     	9       2.56	0.1777
+ 
+ 
+Problem 7.2
+data QUES7_2;
+do TREAT = 'A', 'B', 'Placebo';
+  	do subj = 1 to 10;
+        	input choles @;
+        	output;
+  	end;
+end;
+drop subj;
+datalines;
+220 190 180 185 210 170 178 200 177 189
+160 168 178 200 172 155 159 167 185 199
+240 220 246 244 198 238 277 255 190 188
+;
+run;
+ 
+proc ANOVA data = QUES7_2;
+Title "Cholesterol Levels";
+class TREAT;
+model CHOLES = TREAT;
+means TREAT / SNK;
+run;
+ 
+                   	Cholesterol Levels    	14:11 Friday, April 25, 2014  11
+ 
+                                   	The ANOVA Procedure
+ 
+                                 	Class Level Information
+ 
+                              	Class     	Levels	Values
+ 
+                              	TREAT          	3	A B P
+ 
+ 
+                         	Number of Observations Read      	30
+                         	Number of Observations Used      	30
+                                        Cholesterol Levels    	14:11 Friday, April 25, 2014  12
+ 
+                                   	The ANOVA Procedure
+ 
+Dependent Variable: choles
+ 
+                                               Sum of
+   	Source                  	DF     	Squares 	Mean Square	F Value    Pr > F
+ 
+   	Model                    	2 	16258.46667  	8129.23333  	17.58    <.0001
+ 
+   	Error                   	27 	12483.40000   	462.34815
+ 
+   	Corrected Total         	29 	28741.86667
+ 
+ 
+     	              R-Square 	Coeff Var  	Root MSE	choles Mean
+ 
+                   	0.565672  	10.86340  	21.50228   	197.9333
+ 
+ 
+   	Source                  	DF    	Anova SS 	Mean Square	F Value    Pr > F
+ 
+   	TREAT                    	2 	16258.46667  	8129.23333  	17.58    <.0001
+                                        Cholesterol Levels    	14:11 Friday, April 25, 2014  13
+ 
+                                   	The ANOVA Procedure
+ 
+                               Student-Newman-Keuls Test for choles
+ 
+NOTE: This test controls the Type I experimentwise error rate under the complete null hypothesis
+                          	but not under partial null hypotheses.
+ 
+ 
+                  	          Alpha                    	0.05
+                            	Error Degrees of Freedom   	27
+                            	Error Mean Square    	462.3481
+ 
+ 
+                      	Number of Means          	2          	3
+  	                    Critical Range   	19.730634  	23.842361
+ 
+ 
+               	Means with the same letter are not significantly different.
+ 
+ 
+                  	SNK Grouping      	Mean  	N    TREAT
+ 
+                             	A   	229.600 	10    P
+ 
+                             	B   	189.900 	10    A
+                             	B
+                             	B   	174.300 	10    B
+ 
+ 
+Problem 7.6
+ 
+data QUES7_6;
+do GROUP = 'Genetic Def', 'Normal';
+  	do DRUG = 'Anti-Depression', 'Placebo';
+        	do subj = 1 to 4;
+              	input rating @;
+              	output;
+        	end;
+  	end;
+end;
+drop subj;
+datalines;
+9 11 10 10 9 6 6 7 5 4 7 7 12 11 10 11
+;
+run;
+ 
+proc ANOVA data = QUES7_6;
+class GROUP DRUG;
+model rating = GROUP | DRUG;
+means GROUP | DRUG / SNK;
+run;
+ 
+                                        Cholesterol Levels    	14:11 Friday, April 25, 2014  15
+ 
+                                   	The ANOVA Procedure
+ 
+                                 	Class Level Information
+ 
+                     	Class     	Levels	Values
+ 
+                     	GROUP          	2	Genetic Def Normal
+ 
+    	                 DRUG           	2	Anti-Depression Placebo
+ 
+ 
+                         	Number of Observations Read      	16
+                         	Number of Observations Used      	16
+                                        Cholesterol Levels    	14:11 Friday, April 25, 2014  16
+ 
+                                   	The ANOVA Procedure
+ 
+Dependent Variable: rating
+ 
+                                               Sum of
+   	Source                      DF     	Squares 	Mean Square	F Value    Pr > F
+ 
+   	Model                    	3 	73.18750000 	24.39583333  	17.48    0.0001
+ 
+   	Error                   	12 	16.75000000  	1.39583333
+ 
+   	Corrected Total         	15 	89.93750000
+ 
+ 
+                   	R-Square 	Coeff Var  	Root MSE	rating Mean
+ 
+                   	0.813760  	14.00242  	1.181454   	8.437500
+ 
+ 
+   	Source                  	DF    	Anova SS 	Mean Square	F Value    Pr > F
+ 
+   	GROUP                    	1  	0.06250000  	0.06250000   	0.04    0.8360
+   	DRUG                     	1  	5.06250000  	5.06250000   	3.63    0.0811
+   	GROUP*DRUG               	1 	68.06250000 	68.06250000  	48.76    <.0001
+                                        Cholesterol Levels    	14:11 Friday, April 25, 2014  17
+ 
+                                   	The ANOVA Procedure
+ 
+                               Student-Newman-Keuls Test for rating
+ 
+NOTE: This test controls the Type I experimentwise error rate under the complete null hypothesis
+                          	but not under partial null hypotheses.
+ 
+ 
+               	             Alpha                    	0.05
+                            	Error Degrees of Freedom   	12
+                            	Error Mean Square    	1.395833
+ 
+ 
+                              	Number of Means          	2
+      	                        Critical Range   	1.2870835
+ 
+ 
+               	Means with the same letter are not significantly different.
+ 
+ 
+               	SNK Grouping      	Mean  	N    GROUP
+ 
+                          	A    	8.5000  	8    Genetic Def
+                          	A
+                          	A    	8.3750  	8    Normal
+                                        Cholesterol Levels    	14:11 Friday, April 25, 2014  18
+ 
+                 	                  The ANOVA Procedure
+ 
+                               Student-Newman-Keuls Test for rating
+ 
+NOTE: This test controls the Type I experimentwise error rate under the complete null hypothesis
+                          	but not under partial null hypotheses.
+ 
+ 
+                            	Alpha                    	0.05
+                            	Error Degrees of Freedom   	12
+                            	Error Mean Square    	1.395833
+ 
+ 
+                              	Number of Means          	2
+                              	Critical Range   	1.2870835
+ 
+ 
+               	Means with the same letter are not significantly different.
+ 
+ 
+             	SNK Grouping      	Mean  	N    DRUG
+ 
+               	         A    	9.0000  	8    Placebo
+                        	A
+                        	A    	7.8750  	8    Anti-Depression
+                                        Cholesterol Levels    	14:11 Friday, April 25, 2014  19
+ 
+                                   	The ANOVA Procedure
+ 
+ 
+         	Level of    	Level of              	------------rating-----------
+         	GROUP       	DRUG            	N         	Mean      	Std Dev
+ 
+         	Genetic Def 	Anti-Depression 	4       10.0000000   	0.81649658
+         	Genetic Def 	Placebo         	4    	7.0000000   	1.41421356
+         	Normal      	Anti-Depression 	4        5.7500000   	1.50000000
+         	Normal  	    Placebo         	4   	11.0000000   	0.81649658
