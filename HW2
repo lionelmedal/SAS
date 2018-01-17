@@ -1,0 +1,228 @@
+2.1
+data Students;
+  	input ID Age Gender $ GPA CSCORE;
+  	Index = GPA + 3 * CSCORE / 500;
+  	datalines;
+1 18 M 3.7 650
+2 18 F 2.0 490
+3 19 F 3.3 580
+4 23 M 2.8 530
+5 21 M 3.5 640
+;
+proc freq data = Students;
+  	Title "Frequency of Males and Females";
+  	tables Gender / NOCUM NOPERCENT;
+Run;
+Frequency of Males and Females                                 2
+                                                                  12:58 Friday, February 28, 2014
+                                            	The FREQ Procedure
+                                      Gender         	Frequency
+                                      ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                                            	F          	2
+                                            	M         	3
+ 
+Problem 2.2
+data CLINIC;
+  	input
+  	  	ID $ 1-3
+        	GENDER $ 4
+        	RACE $ 5
+        	HR 6-8
+        	SBP 9-11
+        	DBP 12-14
+        	N_PROC 15-16
+        	;
+  	AVE_BP = DBP + (SBP - DBP) / 3;
+  	datalines;
+001MW08013008010
+002FW08811007205
+003MB05018810002
+004FB   10806801
+005MW06812208204
+006FB101   07404
+007FW07810406603
+008MW04811207006
+009FB07719011009
+010FB06616410610
+  	 ;
+proc means data = CLINIC NMISS MEAN STD CLM MEDIAN MAXDEC=2;
+  	TITLE "Descriptive Statistics for the Clinic";
+  	var SBP DBP AVE_BP;
+  	run;
+                            	Descriptive Statistics for the Clinic                                 	6
+                                                                  12:58 Friday, February 28, 2014
+                                            	The MEANS Procedure
+            	N                         	                    Lower 95%     	Upper 95%
+Variable    Miss                  	Mean   	Std Dev   CL for Mean       	CL for Mean       	Median
+ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+SBP            1       	136.44                 	34.81   	109.69                 	163.20                 	122.00
+DBP            0       	82.80                   	16.47                   	71.02                   	94.58                   	77.00
+AVE_BP         1   	101.33                 	22.80                   	83.81   	 118.86                	95.33
+ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+ 
+Problem 2.4
+data CLINIC;
+  	input
+        	ID $ 1-3
+        	GENDER $ 4
+        	RACE $ 5
+        	HR 6-8
+        	SBP 9-11
+        	DBP 12-14
+        	N_PROC 15-16
+        	;
+  	AVE_BP = DBP + (SBP - DBP) / 3;
+  	datalines;
+001MW08013008010
+002FW08811007205
+003MB05018810002
+004FB   10806801
+005MW06812208204
+006FB101   07404
+007FW07810406603
+008MW04811207006
+009FB07719011009
+010FB06616410610
+;
+proc freq data = CLINIC;
+  	Title "Frequency by Gender";
+  	Tables GENDER / NOCUM NOPERCENT;
+  	run;
+proc GCHART data = CLINIC;
+  	Title "Frequency Bar Graph for Gender";
+  	VBAR GENDER;
+  	run;
+                                      Frequency by Gender 	12:58 Friday, February 28, 2014   9
+            	                                  The FREQ Procedure
+                                      GENDER      	Frequency
+                                      ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                                            	F          	6
+                                            	M         	4
+
+Problem 2.5
+A.
+ 
+data PROB2_5;
+  	LENGTH GROUP $ 1;
+  	INPUT X Y Z GROUP $;
+datalines;
+2 4 6 A
+3 3 3 B
+1 3 7 A
+7 5 3 B
+1 1 5 B
+2 2 4 A
+5 5 6 A
+;
+proc GCHART data = PROB2_5;
+  	Title "Frequency Bar Chart for Group";
+  	VBAR GROUP;
+  	run;
+
+2.5
+B.
+data PROB2_5;
+  	LENGTH GROUP $ 1;
+  	INPUT X Y Z GROUP $;
+datalines;
+2 4 6 A
+3 3 3 B
+1 3 7 A
+7 5 3 B
+1 1 5 B
+2 2 4 A
+5 5 6 A
+;
+ 
+proc gplot data = PROB2_5;
+  	title "Plot of Y versus X";
+  	PLOT Y*X;
+  	run;
+ 
+
+ 
+2.5
+C.
+data PROB2_5;
+  	LENGTH GROUP $ 1;
+  	INPUT X Y Z GROUP $;
+datalines;
+2 4 6 A
+3 3 3 B
+1 3 7 A
+7 5 3 B
+1 1 5 B
+2 2 4 A
+5 5 6 A
+;
+ 
+proc gplot data = PROB2_5;
+  	title "Plot of Y versus X";
+  	PLOT Y*X=GROUP;
+  	run;
+
+ 
+2.8
+data CLINIC;
+  	input
+  	  	ID $ 1-3
+   	 	GENDER $ 4
+   	 	RACE $ 5
+   	 	HR 6-8
+   	 	SBP 9-11
+   	 	DBP 12-14
+   	 	N_PROC 15-16
+   	 	;
+  	AVE_BP = DBP + (SBP - DBP) / 3;
+  	datalines;
+001MW08013008010
+002FW08811007205
+003MB05018810002
+004FB   10806801
+005MW06812208204
+006FB101   07404
+007FW07810406603
+008MW04811207006
+009FB07719011009
+010FB06616410610
+;
+ 
+proc gchart data = CLINIC;
+  	Title "Chart of Gender and Race";
+  	vbar GENDER / group = RACE;
+  	run;
+ 
+proc gchart data = CLINIC;
+  	title "Chart of Gender and Race 2";
+  	vbar HR / GROUP = GENDER MIDPOINTS=50 TO 100 BY 10;
+  	run;
+ 
+2.9
+data 123;
+  	INPUT AGE STATUS PROGNOSIS DOCTOR GENDER STATUS2 STATUS3;
+ 
+  	(data lines)
+  	;
+ 
+proc chart data=123 BY GENDER;
+  	VBAR STATUS;
+  	VBAR PROGNOSIS;
+  	run;
+ 
+proc plot data=123;
+  	DOCTOR BY PROGNOSIS;
+  	run;
+ 
+The first error in this code is in the proc chart section.  The user is attempting to graph the data by gender in the proc statement; however, that is syntactically incorrect.  To do this he should correct it to be:
+  	proc chart data=123;
+  	VBAR STATUS / GROUP = GENDER;
+  	VBAR PROGNOSIS / GROUP = GENDER;
+  	run;
+ 
+This then will group the two charts by their gender.
+ 
+The second error is in the proc plot statement.  The user is trying to organize the plot to have the doctor on the y-axis and the prognosis on the x-axis.  The user never told the software to “plot” anything and used incorrect syntax in the attempt.  The statement should read:
+  	proc plot data=123;
+  	plot DOCTOR*PROGNOSIS;
+  	run;
+ 
