@@ -1,0 +1,587 @@
+problem 3.1
+proc format;
+  	value A_GROUP
+        	1 = 'Control Group'
+        	2 = 'Aspirin Group'
+        	3 = 'Ibuprofen Group'
+        	;
+run;
+
+problem 3.2
+proc format;
+  	value $GENDER
+        	'1' = 'Male'
+        	'2' = 'Female'
+        	;
+  	value $SES
+        	'L' = 'Low'
+        	'M' = 'Medium'
+        	'H' = 'High'
+        	;
+  	value A_AGE
+        	LOW-20 = '20 and younger'
+        	21-40 = '21 to 40'
+        	41-HIGH = '41 and older'
+        	;
+run;
+ 
+data QUES2;
+  	input ID $
+              	GENDER $
+              	SES $
+              	DRUG $
+              	AGE
+              	;
+  	format  	SES     	$SES.
+              	GENDER  	$GENDER.
+              	;
+  	label SES = 'Socioeconomic Status'
+              	DRUG = 'Drug Group'
+              	AGE = 'Age of Subject'
+              	;
+  	if DRUG = 'A' then COST = 'LOW';
+  	else if DRUG = 'B' then COST = 'LOW';
+  	else if DRUG = 'C' then COST = 'LOW';
+  	else if DRUG = 'F' then COST = 'LOW';
+  	else if DRUG = null then COST = 'NONE';
+  	else COST = 'HIGH';
+  	
+  	datalines;
+001 1 L B 15
+002 2 M Z 35
+003 2 H F 76
+004 1 L C 21
+005 2 H . 58
+        	;
+  	run;
+ 
+proc print data=QUES2;
+  	title 'Data of People';
+  	run;
+ 
+proc freq data=QUES2;
+  	title 'Frequencies for Socioeconomic Status, Cost, and Age';
+  	tables SES COST AGE / NOCUM NOPERCENT;
+  	format AGE A_AGE.;
+  	run;
+ 
+           	Data of People       	13:05 Friday, March 7, 2014  30
+ 
+              	Obs	ID     GENDER	SES   	DRUG    AGE	COST	null
+ 
+               	1 	001    Male  	Low    	B       15	LOW
+               	2 	002    Female	Medium 	Z       35	HIG
+               	3 	003    Female	High   	F       76	LOW
+               	4 	004    Male  	Low    	C       21	LOW
+               	5 	005    Female	High           	58	NON
+         	 Frequencies for Socioeconomic Status, Cost, and Age                  	31
+                                                                       13:05 Friday, March 7, 2014
+ 
+                                    	The FREQ Procedure
+ 
+                                       Socioeconomic Status
+ 
+                                   	SES   	Frequency
+                                       ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                                       High         	2
+            	                       Low          	2
+                                       Medium       	1
+ 
+ 
+                                        COST	Frequency
+                                        ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                                  	  HIG            1
+                                        LOW        	3
+                                        NON        	1
+ 
+ 
+                                      	Age of Subject
+ 
+                                              AGE	Frequency
+                                   ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                               	20 and younger       	1
+                               	21 to 40             	2
+                               	41 and older         	2
+
+problem 3.3
+proc format;
+  	value $GENDER
+        	'M' = 'Male'
+        	'F' = 'Female'
+        	;
+  	value $PARTY
+        	'1' = 'Republican'
+        	'2' = 'Democrat'
+        	'3' = 'Not registered'
+        	;
+  	value $VOTE
+        	'0' = ' No'
+        	'1' = 'Yes'
+        	;
+  	value $FOREIGN
+        	'0' = 'No'
+        	'1' = 'Yes'
+        	;
+  	value $SPEND
+        	'0' = 'No'
+        	'1' = 'Yes'
+        	;
+  	run;
+ 
+data VOTING;
+  	input ID $ 1-3
+  	        	GENDER $ 4
+              	PARTY $ 5
+              	VOTE $ 6
+              	FOREIGN $ 7
+              	SPEND $ 8
+              	;
+  	format  	GENDER  	$GENDER.
+              	PARTY $PARTY.
+              	VOTE  $VOTE.
+              	FOREIGN 	$FOREIGN.
+              	SPEND $SPEND.
+              	;
+  	label ID = 'Subject Identifier'
+              	PARTY = 'Political Party'
+              	VOTE = 'Did you vote in the last election?'
+              	FOREIGN = "Do you agree with the government's foreign policy"
+              	SPEND = 'Should we increase domestic spending?'
+              	;
+  	datalines;
+007M1110
+013F2101
+137F1001
+117 1111
+428M3110
+017F3101
+037M2101
+;
+  	run;
+ 
+proc freq data = VOTING;
+  	tables  	GENDER PARTY VOTE FOREIGN SPEND
+              	/ NOCUM NOPERCENT
+              	;
+  	tables  	(SPEND FOREIGN)*VOTE
+              	/ CHISQ
+              	;
+  	run;
+ 
+                                     	Voting of People      	13:05 Friday, March 7, 2014  54
+ 
+                                    	The FREQ Procedure
+ 
+                                       GENDER	Frequency
+                                       ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                                       Female       	3
+                                       Male         	3
+ 
+                                  	Frequency Missing = 1
+ 
+ 
+                                         Political Party
+ 
+                               	PARTY         	Frequency
+                                   ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                                   Republican           	3
+      	                         Democrat             	2
+                               	Not registered       	2
+ 
+ 
+                            	Did you vote in the last election?
+ 
+                                        VOTE	Frequency
+          	                          ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                                         No        	1
+                                        Yes        	6
+ 
+ 
+                     	Do you agree with the government's foreign policy
+ 
+                	                   FOREIGN	Frequency
+                                       ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                                   	No            	4
+                                   	Yes           	3
+ 
+ 
+                           	Should we increase domestic spending?
+ 
+                                        SPEND	Frequency
+                                        ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                                    	No          	2
+                                        Yes         	5
+ 
+ 
+ 
+                                     	Voting of People      	13:05 Friday, March 7, 2014  55
+ 
+                                    	The FREQ Procedure
+ 
+                              	    Table of SPEND by VOTE
+ 
+                           	SPEND(Should we increase domestic spending?)
+                                         VOTE(Did you vote in the last election?)
+ 
+                           	Frequency‚
+                       	    Percent  ‚
+                           	Row Pct  ‚
+                           	Col Pct  ‚ No     ‚Yes 	‚  Total
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	No   	‚      0 ‚  	2 ‚  	2
+ 	                                   ‚   0.00 ‚  28.57 ‚  28.57
+                                    	‚   0.00 ‚ 100.00 ‚
+                                    	‚   0.00 ‚  33.33 ‚
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+          	                 Yes  	‚      1 ‚  	4 ‚  	5
+                                    	‚  14.29 ‚  57.14 ‚  71.43
+                                    	‚  20.00 ‚  80.00 ‚
+                                    	‚ 100.00 ‚  66.67 ‚
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	Total       	1    	6        7
+                                           14.29	85.71   100.00
+ 
+ 
+                          	Statistics for Table of SPEND by VOTE
+ 
+                  	Statistic                 	DF   	Value  	Prob
+                      ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                  	Chi-Square                 	1  	0.4667    0.4945
+            	      Likelihood Ratio Chi-Square	1      0.7376	0.3904
+                  	Continuity Adj. Chi-Square 	1  	0.0000    1.0000
+                  	Mantel-Haenszel Chi-Square 	1  	0.4000    0.5271
+                  	Phi Coefficient	                  -0.2582
+                  	Contingency Coefficient           	0.2500
+                  	Cramer's V                       	-0.2582
+ 
+                   	WARNING: 100% of the cells have expected counts less
+               	             than 5. Chi-Square may not be a valid test.
+ 
+ 
+                                   	Fisher's Exact Test
+                                ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                            	Cell (1,1) Frequency (F)     	0
+	                            Left-sided Pr <= F      	0.7143
+                            	Right-sided Pr >= F     	1.0000
+ 
+                            	Table Probability (P)   	0.7143
+                            	Two-sided Pr <= P       	1.0000
+ 
+                                     	Sample Size = 7
+ 
+                                     	Voting of People      	13:05 Friday, March 7, 2014  56
+ 
+                         	           The FREQ Procedure
+ 
+                                 	Table of FOREIGN by VOTE
+ 
+                           	FOREIGN(Do you agree with the government's foreign policy)
+                                         VOTE(Did you vote in the last election?)
+ 
+                           	Frequency‚
+                           	Percent  ‚
+                           	Row Pct  ‚
+                           	Col Pct  ‚ No     ‚Yes 	‚  Total
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	No   	‚      1 ‚  	3 ‚  	4
+                                    	‚  14.29 ‚  42.86 ‚  57.14
+                                    	‚  25.00 ‚  75.00 ‚
+                                    	‚ 100.00 ‚  50.00 ‚
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	Yes  	‚      0 ‚  	3 ‚  	3
+                                    	‚   0.00 ‚  42.86 ‚  42.86
+                	                    ‚   0.00 ‚ 100.00 ‚
+                                    	‚   0.00 ‚  50.00 ‚
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	Total       	1    	6        7
+                         	              14.29	85.71   100.00
+ 
+ 
+                         	Statistics for Table of FOREIGN by VOTE
+ 
+                  	Statistic                 	DF   	Value  	Prob
+                      ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                  	Chi-Square                 	1  	0.8750    0.3496
+                  	Likelihood Ratio Chi-Square	1  	1.2429    0.2649
+                  	Continuity Adj. Chi-Square 	1  	0.0000    1.0000
+             	     Mantel-Haenszel Chi-Square 	1      0.7500	0.3865
+                  	Phi Coefficient                   	0.3536
+                  	Contingency Coefficient           	0.3333
+                  	Cramer's V                        	0.3536
+ 
+                   	WARNING: 100% of the cells have expected counts less
+                            	than 5. Chi-Square may not be a valid test.
+ 
+ 
+                                   	Fisher's Exact Test
+                            	ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                            	Cell (1,1) Frequency (F)     	1
+                            	Left-sided Pr <= F      	1.0000
+                            	Right-sided Pr >= F     	0.5714
+ 
+                            	Table Probability (P)   	0.5714
+                            	Two-sided Pr <= P       	1.0000
+ 
+                                     	Sample Size = 7
+
+problem 3.4 
+A.
+proc format;
+		value A_FREQ
+				. = 'Not Available'
+				LOW-2999 = 'Abnormally Low'
+				3000-4000 = 'Low'
+				4001-6000 = 'Medium'
+				6001-12000 = 'High'
+				12001-HIGH = 'Abnormally High'
+		;
+	run;
+data BLOOD;
+  	do I = 1 to 500;
+        	WBC = INT(RANNOR(1368)*2000 + 5000);
+        	X = RANUNI(0);
+        	if X LT .05 then WBC = .;
+        	else if X LT .1 then WBC = WBC - 3000;
+        	else if X LT .15 then WBC = WBC +4000;
+  			if WBC LT 3000 and WBC ~= . then FREQUENCY = WBC;
+  			else if WBC GE 3000 and WBC LE 4000 then FREQUENCY = WBC;
+  			else if WBC GT 4000 and WBC LE 6000 then FREQUENCY = WBC;
+  			else if WBC GT 6000 and WBC LE 12000 then FREQUENCY = WBC;
+  			else if WBC GT 12000 then FREQUENCY = WBC;
+  			else FREQUENCY = WBC;
+        	output;
+  	end;
+  	drop I X;
+ 
+run;
+ 
+proc freq data = BLOOD;
+  	tables FREQUENCY / NOCUM MISSING;
+	format FREQUENCY A_FREQ.;
+run;
+ 
+B.
+proc format;
+  	value WBCGROUP
+              	. = ‘Not Available’
+LOW-3000 = 'Abnormally Low'
+              	3001-4000 = 'Low'
+              	4001-6000 = 'Medium'
+              	6001-12000 = 'High'
+              	12000-HIGH = 'Abnormally High'
+              	;
+  	run;
+              	
+ 
+data BLOOD;
+  	do I = 1 to 500;
+        	WBC = INT(RANNOR(1368)*2000 + 5000);
+        	X = RANUNI(0);
+        	if X LT .05 then WBC = .;
+        	else if X LT .1 then WBC = WBC - 3000;
+        	else if X LT .15 then WBC = WBC +4000;
+        	output;
+  	end;
+  	drop I X;
+run;
+ 
+proc freq data = BLOOD;
+  	tables WBC / NOCUM MISSING;
+  	format WBC WBCGROUP.;
+  	run;
+ 
+               	The SAS System      	10:59 Monday, March 10, 2014   2
+ 
+                                    	The FREQ Procedure
+ 
+                                         WBC	Frequency 	Percent
+                             ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                         	Missing              	29    	5.80
+                         	Abnormally Low       	77   	15.40
+                         	Low                  	58   	11.60
+                         	Medium          	    157       31.40
+                         	High                	174   	34.80
+                         	Abnormally High       	5    	1.00
+
+problem 3.5
+1. Recoded with “if” statements:
+data DEMOG;
+  	input WEIGHT HEIGHT GENDER $;
+ 
+  	if WEIGHT GE 0 and WEIGHT LE 100 then WEIGHT = 1;
+  	else if WEIGHT GT 100 and WEIGHT LE 150 then WEIGHT = 2;
+  	else if WEIGHT GT 150 and WEIGHT LE 200 then WEIGHT = 3;
+  	else if WEIGHT GT 200 then WEIGHT = 4;
+ 
+  	if HEIGHT GE 0 and HEIGHT LE 70 then HEIGHT = 1;
+  	else if HEIGHT GT 70 then HEIGHT = 2;
+ 
+  	datalines;
+155 68 M
+98  60 F
+202 72 M
+280 75 M
+130 63 F
+.   57 F
+166  . M
+;
+ 
+run;
+ 
+proc freq data = DEMOG;
+  	tables WEIGHT*HEIGHT / NOPERCENT NOROW NOCOL;
+  	run;
+ 
+                     	The SAS System      	10:59 Monday, March 10, 2014   6
+ 
+                                    	The FREQ Procedure
+ 
+                                	Table of WEIGHT by HEIGHT
+ 
+                           	WEIGHT 	HEIGHT
+ 
+                           	Frequency‚   	1‚       2‚  Total
+            	               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                                  	1 ‚  	1 ‚      0 ‚  	1
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                                  	2 ‚  	1 ‚      0 ‚  	1
+              	             ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                                  	3 ‚  	1 ‚      0 ‚  	1
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                                  	4 ‚  	0 ‚      2 ‚  	2
+                	           ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	Total       	3    	2        5
+ 
+                                  	Frequency Missing = 2
+2. Recoded using formats:
+proc format;
+  	value A_WEIGHT
+        	0-100 = 1
+        	101-150 = 2
+        	151-200 = 3
+        	201-HIGH =4
+        	;
+  	value A_HEIGHT
+        	0-70 = 1
+        	71-HIGH =2
+        	;
+run;
+ 
+data DEMOG;
+  	input WEIGHT HEIGHT GENDER $;
+  	datalines;
+155 68 M
+98  60 F
+202 72 M
+280 75 M
+130 63 F
+.   57 F
+166  . M
+;
+ 
+run;
+ 
+proc freq data = DEMOG;
+  	tables WEIGHT*HEIGHT / NOPERCENT NOROW NOCOL;
+  	format  	WEIGHT A_WEIGHT.
+              	HEIGHT A_HEIGHT.
+              	;
+  	run;
+ 
+             	The SAS System      	10:59 Monday, March 10, 2014   7
+ 
+                                    	The FREQ Procedure
+ 
+                                	Table of WEIGHT by HEIGHT
+ 
+                           	WEIGHT 	HEIGHT
+ 
+                           	Frequency‚1   	‚2       ‚  Total
+            	               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	1    	‚      1 ‚  	0 ‚  	1
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	2    	‚      1 ‚  	0 ‚  	1
+              	             ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	3    	‚      1 ‚  	0 ‚  	1
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	4    	‚      0 ‚  	2 ‚  	2
+                	           ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	Total       	3    	2        5
+ 
+                                  	Frequency Missing = 2
+
+problem 3.7
+proc format;
+  	value $SES
+              	'0' = 'Low SES'
+              	'1' = 'High Ses'
+              	;
+run;
+ 
+data QUES3_7;
+  	input ASTHMA $ SES $ COUNT;
+ 
+  	label ASTHMA = 'Does the person have asthma?'
+              	SES = 'Socioeconomic status'
+              	;
+  	format  	SES $SES.
+              	;
+  	datalines;
+yes 0 40
+no  0 100
+yes 1 30
+no  1 130
+;
+ 
+run;
+ 
+proc freq data = QUES3_7;
+  	tables SES*ASTHMA / CHISQ NOCUM NOROW NOCOL;
+  	weight COUNT;
+run;
+ 
+              	The SAS System      	10:59 Monday, March 10, 2014  11
+ 
+                                    	The FREQ Procedure
+ 
+                                  	Table of SES by ASTHMA
+ 
+                               SES(Socioeconomic status)
+                                         ASTHMA(Does the person have asthma?)
+ 
+                           	Frequency‚
+                           	Percent  ‚no      ‚yes 	‚  Total
+       	                    ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	Low SES  ‚    100 ‚ 	40 ‚	140
+                                    	‚  33.33 ‚  13.33 ‚  46.67
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	High Ses ‚	130 ‚     30 ‚	160
+                                    	‚  43.33 ‚  10.00 ‚  53.33
+                               ƒƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆƒƒƒƒƒƒƒƒˆ
+                           	Total     	230   	70      300
+                                           76.67	23.33   100.00
+ 
+ 
+                          	Statistics for Table of SES by ASTHMA
+ 
+                  	Statistic                 	DF   	Value  	Prob
+                  	ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                  	Chi-Square                 	1  	4.0262    0.0448
+                  	Likelihood Ratio Chi-Square	1  	4.0234    0.0449
+                  	Continuity Adj. Chi-Square 	1  	3.4959    0.0615
+                  	Mantel-Haenszel Chi-Square 	1  	4.0128    0.0452
+                  	Phi Coefficient                  	-0.1158
+                  	Contingency Coefficient           	0.1151
+                  	Cramer's V                       	-0.1158
+ 
+ 
+                                   	Fisher's Exact Test
+                                ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+                            	Cell (1,1) Frequency (F)   	100
+                   	         Left-sided Pr <= F      	0.0308
+                            	Right-sided Pr >= F     	0.9839
+ 
+                            	Table Probability (P)   	0.0148
+                            	Two-sided Pr <= P       	0.0552
+ 
+                                    	Sample Size = 300
