@@ -1,2 +1,2 @@
 # SAS
--Old code found on CPU
+-Old code found on CPU. Please excuse the poor structure. 
