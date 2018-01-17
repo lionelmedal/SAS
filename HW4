@@ -1,0 +1,225 @@
+Problem 5.1
+Part a:
+data QUES1;
+  	input x y z;
+  	datalines;
+1  3 15
+7 13  7
+8 12  5
+3  4 14
+4  7 10
+;
+run;
+ 
+proc corr data = QUES1 NOSIMPLE;
+  	title "Correlation between X and Y and X and Z";
+  	var x ;
+  	with y z;
+  	run;
+ 
+Correlation between X and Y and X and Z
+ 
+The CORR Procedure
+2 With Variables:
+y z
+1 Variables:
+x
+ 
+Pearson Correlation Coefficients, N = 5
+Prob > |r| under H0: Rho=0
+
+ 
+x
+y
+0.96509
+0.0078
+
+z
+-0.97525
+0.0047
+
+ 
+ 
+Part b.
+ 
+data QUES1;
+  	input x y z;
+  	datalines;
+1  3 15
+7 13  7
+8 12  5
+3  4 14
+4  7 10
+;
+run;
+ 
+proc corr data = QUES1 NOSIMPLE;
+  	title "Correlation between X and Y and X and Z";
+  	var x y z;
+  	run;
+ 
+ 
+Correlation between X and Y and X and Z
+ 
+The CORR Procedure
+3 Variables:
+x y z
+ 
+Pearson Correlation Coefficients, N = 5
+Prob > |r| under H0: Rho=0
+
+
+
+ 
+x
+y
+z
+x
+1.00000
+ 
+
+0.96509
+0.0078
+
+-0.97525
+0.0047
+
+y
+0.96509
+0.0078
+
+1.00000
+ 
+
+-0.96317
+0.0084
+
+z
+-0.97525
+0.0047
+
+-0.96317
+0.0084
+
+1.00000
+ 
+
+ 
+ 
+
+Problem 5.2
+data EXAM;
+  	input (Q1-Q8) (1.);
+  	RAW = SUM(of Q1-Q8);
+  	datalines;
+10101010
+11111111
+11110101
+01100000
+11110001
+11111111
+11111101
+11111101
+10110101
+00010110
+;
+ 
+proc corr data = EXAM NOSIMPLE;
+  	title "Correlation of questions with exam score";
+  	var RAW;
+  	with Q1-Q8;
+  	run;
+ 
+Correlation of questions with exam score
+ 
+The CORR Procedure
+8 With Variables:
+Q1 Q2 Q3 Q4 Q5 Q6 Q7 Q8
+1 Variables:
+RAW
+ 
+Pearson Correlation Coefficients, N = 10
+Prob > |r| under H0: Rho=0
+
+ 
+RAW
+Q1
+0.76447
+0.0100
+
+Q2
+0.50046
+0.1407
+
+Q3
+0.42471
+0.2212
+
+Q4
+0.63706
+0.0476
+
+Q5
+0.66254
+0.0368
+
+Q6
+0.61168
+0.0602
+
+Q7
+0.10403
+0.7749
+
+Q8
+0.83411
+0.0027
+
+
+Problem 5.9
+Part A.
+ 
+data QUES9;
+  	input x y z;
+  	datalines;
+1  3 15
+7 13  7
+8 12  5
+3  4 14
+4  7 10
+;
+run;
+ 
+proc gplot data = QUES9;
+  	plot Y*X;
+  	run;
+ 
+ 
+Part B.
+ 
+data QUES9;
+  	input x y z;
+  	datalines;
+1  3 15
+7 13  7
+8 12  5
+3  4 14
+4  7 10
+;
+run;
+ 
+ 
+proc reg data = QUES9;
+  	title "Linear Regression of Y and X";
+  	Model y = x;
+  	plot y * x;
+  	run;
+  	
+ 
+Linear Regression of Y and X
+ 
+The REG Procedure
+Model: MODEL1
+Dependent Variable: y
+
+
